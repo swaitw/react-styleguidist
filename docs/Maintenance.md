@@ -15,7 +15,7 @@ Help us develop and maintain Styleguidist:
 
 ## Commit message conventions
 
-We use a simplified [Angular commit message conventions](https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit). This makes automated releases with [semantic-release](https://github.com/semantic-release/semantic-release) possible.
+We use a simplified [Angular commit message conventions](https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit). This makes automated releases with [semantic-release](https://github.com/semantic-release/semantic-release) possible.
 
 \*\*The main differences with the Angular convention is that all messages are capitalized. Commit messages are written for humans to read, so we should use text convention for humans, not for machines.
 
@@ -120,7 +120,7 @@ export default function renderExtra(prop: PropDescriptorWithFlow): React.ReactNo
   if (!prop.type || !type) {
     return null;
   }
-````
+```
 
 Unfortunately, this extra condition has resulted in this method always returning `null` for a Flow typed prop as `prop.type` is always `null` as `prop.type` is never set.
 
@@ -128,7 +128,7 @@ This commit reverts the condition to what it was before the migration to TypeScr
 
 Fixes #1234
 
-```
+````
 
 ## Pull requests
 
@@ -178,4 +178,4 @@ Here’s a [good example of a changelog](https://github.com/styleguidist/react-s
 
 - Information about pull request authors:<br> `(#1040 by @rafaesc)`
 - Open Collective link at the very top:<br> `👋 **[Support Styleguidist](https://opencollective.com/styleguidist) on Open Collective** 👋`
-```
+

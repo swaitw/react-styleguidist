@@ -1,5 +1,4 @@
 import React, { cloneElement, Children } from 'react';
-import PropTypes from 'prop-types';
 import cx from 'clsx';
 import Styled, { JssInjectedProps } from 'rsg-components/Styled';
 import * as Rsg from '../../../../typings';
@@ -30,7 +29,7 @@ interface ListProps extends JssInjectedProps {
 
 export const ListRenderer: React.FunctionComponent<ListProps> = ({
 	classes,
-	ordered,
+	ordered = false,
 	children,
 }) => {
 	const Tag = ordered ? 'ol' : 'ul';
@@ -39,19 +38,11 @@ export const ListRenderer: React.FunctionComponent<ListProps> = ({
 
 	return (
 		<Tag className={classNames}>
-			{Children.map(children, li =>
+			{Children.map(children, (li) =>
 				React.isValidElement(li) ? cloneElement(li, { className: classes.li }) : li
 			)}
 		</Tag>
 	);
-};
-ListRenderer.propTypes = {
-	classes: PropTypes.objectOf(PropTypes.string.isRequired).isRequired,
-	ordered: PropTypes.bool,
-	children: PropTypes.node.isRequired,
-};
-ListRenderer.defaultProps = {
-	ordered: false,
 };
 
 export default Styled<ListProps>(styles)(ListRenderer);

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import ComponentsList from 'rsg-components/ComponentsList';
 import TableOfContentsRenderer from 'rsg-components/TableOfContents/TableOfContentsRenderer';
 import filterSectionsByName from '../../utils/filterSectionsByName';
@@ -10,21 +9,10 @@ interface TableOfContentsProps {
 	sections: Rsg.Section[];
 	useRouterLinks?: boolean;
 	tocMode?: string;
-	loc: { hash: string; pathname: string };
+	loc?: { hash: string; pathname: string };
 }
 
 export default class TableOfContents extends Component<TableOfContentsProps> {
-	public static propTypes = {
-		sections: PropTypes.array.isRequired,
-		useRouterLinks: PropTypes.bool,
-		tocMode: PropTypes.string,
-		loc: PropTypes.object,
-	};
-
-	public static defaultProps = {
-		loc: window.location,
-	};
-
 	public state = {
 		searchTerm: '',
 	};
@@ -36,7 +24,7 @@ export default class TableOfContents extends Component<TableOfContentsProps> {
 		useHashId = false
 	): { content: React.ReactElement; containsSelected: boolean } {
 		// Match selected component in both basic routing and pagePerSection routing.
-		const { hash, pathname } = this.props.loc;
+		const { hash, pathname } = this.props.loc ?? window.location;
 		const windowHash = pathname + (useRouterLinks ? hash : getHash(hash));
 
 		let childrenContainSelected = false;
@@ -91,7 +79,9 @@ export default class TableOfContents extends Component<TableOfContentsProps> {
 					? sections[0].sections
 					: sections[0].components
 				: sections;
-		const filtered = firstLevel ? filterSectionsByName(firstLevel, searchTerm) : firstLevel || [];
+		const filtered = firstLevel
+			? filterSectionsByName(firstLevel as Rsg.TOCItem[], searchTerm)
+			: firstLevel || [];
 
 		return this.renderLevel(filtered, useRouterLinks).content;
 	}

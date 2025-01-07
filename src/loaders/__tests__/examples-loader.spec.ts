@@ -1,4 +1,3 @@
-import { encode } from 'qss';
 import examplesLoader from '../examples-loader';
 
 /* eslint-disable no-new-func */
@@ -15,11 +14,8 @@ const subComponentQuery = {
 	shouldShowDefaultExample: false,
 };
 
-
-const getQuery = (options = {}) => encode({ ...query, ...options }, '?');
-const getSubComponentQuery = (options = {}) => encode({ ...subComponentQuery, ...options }, '?');
-
-
+const getQueryOptions = (options = {}) => ({ ...query, ...options });
+const getSubComponentQueryOptions = (options = {}) => ({ ...subComponentQuery, ...options });
 
 it('should return valid, parsable JS', () => {
 	const exampleMarkdown = `
@@ -35,7 +31,7 @@ text
 `;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -58,33 +54,16 @@ it('should replace all occurrences of __COMPONENT__ with provided query.displayN
 
 	const result = examplesLoader.call(
 		{
-			query: getQuery({ shouldShowDefaultExample: true }),
+			getOptions: () => getQueryOptions({ shouldShowDefaultExample: true }),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
 	);
 	expect(result).not.toMatch(/__COMPONENT__/);
 	const componentHtml = result.match(/<div>(.*?)<\/div>/);
-	expect(componentHtml && componentHtml[0]).toMatchInlineSnapshot(`
-		<div>
-		  \\n\\t
-		  <FooComponent>
-		    \\n\\t\\t
-		    <span>
-		      text
-		    </span>
-		    \\n\\t\\t
-		    <span>
-		      Name of component: FooComponent
-		    </span>
-		    \\n\\t
-		  </FooComponent>
-		  \\n\\t
-		  <FooComponent>
-		  </FooComponent>
-		  \\n
-		</div>
-	`);
+	expect(componentHtml && componentHtml[0]).toMatchInlineSnapshot(
+		`"<div>\\\\n\\\\t<FooComponent>\\\\n\\\\t\\\\t<span>text</span>\\\\n\\\\t\\\\t<span>Name of component: FooComponent</span>\\\\n\\\\t</FooComponent>\\\\n\\\\t<FooComponent />\\\\n</div>"`
+	);
 });
 
 it('should pass updateExample function from config to chunkify', () => {
@@ -93,10 +72,10 @@ it('should pass updateExample function from config to chunkify', () => {
 <h1>Hello world!</h2>
 \`\`\`
 `;
-	const updateExample = jest.fn(props => props);
+	const updateExample = jest.fn((props) => props);
 	examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			resourcePath: '/path/to/foo/examples/file',
 			_styleguidist: {
 				updateExample,
@@ -127,7 +106,7 @@ Two:
 `;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -148,7 +127,7 @@ One:
 `;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -167,7 +146,7 @@ it('should work with multiple JSX element on the root level', () => {
 `;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -181,7 +160,7 @@ it('should prepend example code with React require()', () => {
 	const exampleMarkdown = `<X/>`;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -198,7 +177,7 @@ it('should prepend example code with component require()', () => {
 	const exampleMarkdown = `<X/>`;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -215,7 +194,7 @@ it('should prepend example code with root component require() for sub components
 	const exampleMarkdown = `<X/>`;
 	const result = examplesLoader.call(
 		{
-			query: getSubComponentQuery(),
+			getOptions: () => getSubComponentQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -235,7 +214,7 @@ it('should allow explicit import of React and component module', () => {
     <FooComponent/>`;
 	const result = examplesLoader.call(
 		{
-			query: getQuery(),
+			getOptions: () => getQueryOptions(),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown
@@ -258,7 +237,7 @@ it('should works for any Markdown file, without a current component', () => {
     <FooComponent/>`;
 	const result = examplesLoader.call(
 		{
-			query: '',
+			getOptions: () => ({}),
 			_styleguidist: {},
 		} as any,
 		exampleMarkdown

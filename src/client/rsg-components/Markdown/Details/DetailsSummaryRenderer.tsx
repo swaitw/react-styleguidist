@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Styles } from 'jss';
 import Styled, { JssInjectedProps } from 'rsg-components/Styled';
 import * as Rsg from '../../../../typings';
 
-const styles = ({ space, color, fontSize, fontFamily }: Rsg.Theme) => ({
+const styles = ({ space, color, fontSize, fontFamily }: Rsg.Theme): Styles => ({
 	summary: {
 		marginBottom: space[1],
 		fontFamily: fontFamily.base,
@@ -31,7 +32,7 @@ export const DetailsSummaryRenderer: React.FunctionComponent<DetailsSummaryProps
 
 DetailsSummaryRenderer.propTypes = {
 	classes: PropTypes.objectOf(PropTypes.string.isRequired).isRequired,
-	children: PropTypes.node.isRequired,
+	children: PropTypes.any.isRequired,
 };
 
 export default Styled<DetailsSummaryProps>(styles)(DetailsSummaryRenderer);
